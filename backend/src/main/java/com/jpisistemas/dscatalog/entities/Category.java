@@ -2,12 +2,15 @@ package com.jpisistemas.dscatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -15,7 +18,6 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "tb_category")
 public class Category implements Serializable {
-
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -27,10 +29,12 @@ public class Category implements Serializable {
 	private Instant createdAt;
 
 	@Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
-	private Instant updateAt;
+	private Instant updatedAt;
+
+	@ManyToMany(mappedBy = "categories")
+	private Set<Product> products = new HashSet<>();
 
 	public Category() {
-
 	}
 
 	public Category(Long id, String name) {
@@ -58,18 +62,22 @@ public class Category implements Serializable {
 		return createdAt;
 	}
 
-	public Instant getUpdateAt() {
-		return updateAt;
+	public Instant getUpdatedAt() {
+		return updatedAt;
 	}
-	
+
 	@PrePersist
 	public void prePersist() {
 		createdAt = Instant.now();
 	}
-	
+
 	@PreUpdate
 	public void preUpdate() {
-		updateAt = Instant.now();
+		updatedAt = Instant.now();
+	}
+
+	public Set<Product> getProducts() {
+		return products;
 	}
 
 	@Override
@@ -96,5 +104,4 @@ public class Category implements Serializable {
 			return false;
 		return true;
 	}
-
 }
