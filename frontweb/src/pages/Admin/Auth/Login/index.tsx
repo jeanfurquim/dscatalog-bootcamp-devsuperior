@@ -1,17 +1,26 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import ButtonIcon from 'components/ButtonIcon';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { getAuthData, requestBackendLogin, saveAuthData } from 'util/requests';
 
 import './styles.css';
-import { getAuthData, requestBackendLogin, saveAuthData } from 'util/requests';
 
 type FormData = {
   username: string;
   password: string;
 };
 
+type LocationState = {
+  from: string;
+}
+//teste
 const Login = () => {
+
+  const location = useLocation<LocationState>();
+
+  const { from } = location.state || { from: {pathname: '/admin' } };
+
   const [hasError, setHasError] = useState(false);
 
   const { register, handleSubmit, formState: {errors} } = useForm<FormData>();
@@ -26,7 +35,7 @@ const Login = () => {
         console.log('TOKEN GERADO: ' + token)
         setHasError(false);
         console.log('SUCESSO', response);
-        history.push('/admin');
+        history.replace(from);
       })
       .catch((error) => {
         setHasError(true);
