@@ -14,7 +14,7 @@ type FormData = {
 type LocationState = {
   from: string;
 }
-//teste
+
 const Login = () => {
 
   const location = useLocation<LocationState>();
